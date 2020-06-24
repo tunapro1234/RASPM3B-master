@@ -1,3 +1,4 @@
+from raspm3b.res.globalv import *
 from raspm3b.tui import terminal
 
 def command_handler(Arduino):
@@ -17,6 +18,9 @@ def command_handler(Arduino):
             elif command[0].startswith("nano") and command[0][4] == ".":
                 command = " ".join(command)
                 terminal.nano(command, Arduino)
+            
+            
+            # komutların devamı gelcek 
 
 
 def main(ardFunc):
@@ -24,7 +28,7 @@ def main(ardFunc):
         Arduino = ardFunc()
     
     except:
-        print("CANNOT IMPORT BOARDS.")
+        print(fail + "CANNOT IMPORT BOARDS.")
         return False
     
     else:
