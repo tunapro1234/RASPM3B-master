@@ -1,4 +1,5 @@
 from raspm3b.res.globalv import *
+import raspm3b.lib.HTTPHandler as Server
 import sys, os
 
 
@@ -9,8 +10,8 @@ def command_list(command=""):
 def clear():
     os.system("clear")
 
-def exit():
-    exit()
+# def exitt():
+#     exit()
 
 def help(command):
     return "Available commands:\n" + "\n".join(command_list(command))
@@ -25,8 +26,13 @@ def nano(args, Arduino):
         Arduino.write_(args[1], args[2])
 
 # server start komutunu filan ekle
-        
-        
+def server(command, Arduino):
+    if len(command) == 2:
+        if command[1].startswith("sta"):
+            Server.start(Arduino)
+        elif command[1].startswith("sto"):
+            Server.stop(Arduino)
+            
 def test():
     pass
 

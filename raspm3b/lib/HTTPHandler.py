@@ -1,15 +1,19 @@
 # from http.server import ThreadingHTTPServer as HTTPServerCommand
-from http.server import BaseHTTPRequestHandler 
-from http.server import HTTPServer as HTTPServerCommand
-from threading import Thread
-# from raspm3b.res.globalv import *
-import firmpy as firmpy
-# import raspm3b.lib.firmpy
 # from socketserver import TCPServer as HTTPServerCommand
+from http.server import HTTPServer as HTTPServerCommand
+from http.server import BaseHTTPRequestHandler 
+from threading import Thread
 
-fail = "[FAIL] "
-info = "[INFO] "
 
+if __name__ != "__main__":
+    import raspm3b.lib.firmpy as firmpy
+    from raspm3b.res.globalv import *
+
+else:
+    import firmpy as firmpy
+    fail = "[FAIL] "
+    info = "[INFO] "
+    
 arduinos = {}
 
 class test:
@@ -25,20 +29,20 @@ def func1(path):
     
     path = [i for i in path.split("/") if i != ""]
     
-    try:
-        arduinos[path[0]].write_(path[1], path[2])
-        arduinos[path[0]].s_pins[0][1].write(1)     
-        print(path)
-    except:
-        if len(path) >= 3:
-            print(fail + "lib/firmpy write_ error")
-            # print(path)
-        else:
-            print(fail + "lib/HTTPHandler func1 - path error: ")
-            # print(path)
-        return False
-    else:
-        return True
+    # try:
+    arduinos[path[0]].write_(path[1], path[2])
+    # arduinos[path[0]].s_pins[4][1].write(1 - arduinos[path[0]].s_pins[4][1].read())
+    print(path)
+    # except:
+    #     if len(path) >= 3:
+    #         print(fail + "lib/firmpy write_ error")
+    #         print(path)
+    #     else:
+    #         print(fail + "lib/HTTPHandler func1 - path error: ")
+    #         print(path)
+    #     return False
+    # else:
+    #     return True
     
 class HandlerPro(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -74,13 +78,29 @@ class HandlerPro(BaseHTTPRequestHandler):
 
 def test():
     global arduinos
-    board0 = firmpy.Arduino("COM3", [3, 4, 5, 13])
+    board0 = firmpy.Arduino("COM5", [3, 4, 5, 13])
     arduinos = {"nano" : board0}
     
     httpd = HTTPServerCommand(("localhost", 80), HandlerPro)
     print(info + "Started")
     httpd.serve_forever()
     print(info + "Ended")
+
+
+def start(Arduino_nano):
+    global arduinos
+    arduinos = {"nano" : Arduino_nano}
+    
+    print(info + "Starting server...")
+    httpd = HTTPServerCommand(("0.0.0.0", 80), HandlerPro)
+    httpd.serve_forever()
+    # try:
+    #     httpd.serve_forever()
+    # except KeyboardInterrupt:
+    #     print(ok + "Server stopped.")
+
+def stop(Arduino_nano):
+    print(fail + "Not supported yet")
 
 if __name__ == "__main__":
     test()
